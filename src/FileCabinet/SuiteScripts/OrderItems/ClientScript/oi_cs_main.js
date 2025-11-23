@@ -3,8 +3,8 @@
  * VERSION: 3.14 - MRP Order Dates Display
  *
  * Changes in v3.14:
- * - NEW: MRP items now display "📅 Order by: [date]" instead of stock numbers
- * - NEW: Added formatDate() function to format NetSuite dates (startdate)
+ * - NEW: MRP items now display "Order: Dec 3" instead of stock numbers
+ * - NEW: Added formatDateMonthDay() function for compact date display (no year)
  * - Enhanced: Conditional display logic - MRP items show dates, reorder items show stock
  * - Fixed: Issue #2 - MRP order dates now properly displayed
  *
@@ -1208,10 +1208,10 @@ function(runtime, url, dialog) {
                 // Column 6: Stock Status / Order Date (140px) - Shows date for MRP, stock for reorder items
                 '<div class="ns-table-cell">' +
                     (item.source === 'mrp' ?
-                        // MRP items: Show order date
+                        // MRP items: Show order date (compact format)
                         (item.mrpOrderByDate ?
                             '<div class="ns-mrp-date">' +
-                                '<span>📅 Order by: ' + formatDate(item.mrpOrderByDate) + '</span>' +
+                                '<span>Order: ' + formatDateMonthDay(item.mrpOrderByDate) + '</span>' +
                             '</div>' :
                             '<div class="ns-mrp-date"><span>—</span></div>' // MRP with no date
                         ) :
@@ -1834,12 +1834,12 @@ function(runtime, url, dialog) {
     }
 
     /**
-     * v3.14: NEW FUNCTION - Format dates for MRP order display
-     * Converts NetSuite date strings to readable format like "Oct 28, 2025"
+     * v3.14: NEW FUNCTION - Format dates for MRP order display (short format)
+     * Converts NetSuite date strings to compact format like "Dec 3"
      * @param {string} dateString - Date in format YYYY-MM-DD or MM/DD/YYYY
-     * @returns {string} Formatted date like "Oct 28, 2025"
+     * @returns {string} Formatted date like "Dec 3"
      */
-    function formatDate(dateString) {
+    function formatDateMonthDay(dateString) {
         if (!dateString) return '';
 
         try {
@@ -1849,9 +1849,7 @@ function(runtime, url, dialog) {
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                           'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            return months[date.getMonth()] + ' ' +
-                   date.getDate() + ', ' +
-                   date.getFullYear();
+            return months[date.getMonth()] + ' ' + date.getDate();
         } catch (e) {
             console.error('Error formatting date:', e);
             return dateString;
