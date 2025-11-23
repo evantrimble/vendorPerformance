@@ -2,7 +2,14 @@
  * NetSuite RESTlet for Order Items Data
  * Handles item retrieval with pagination, filtering, and vendor information
  * Now includes MRP (Planned Order) integration
- * 
+ *
+ * VERSION 3.3 - Added MRP order dates to API response
+ *
+ * Changes in v3.3:
+ * - NEW: Added getMRPStartDate() and getMRPEndDate() wrapper functions
+ * - NEW: Added mrpOrderByDate (startdate) and mrpDueDate (enddate) fields to API response
+ * - Enhanced: MRP items now expose start/end dates for frontend display
+ *
  * Version 3.2 - Fixed Preferred vendor name retrieval issue
  * VERSION 3.1 - Fixed MRP count case sensitivity issue
  * 
@@ -265,6 +272,12 @@ function(search, log, runtime) {
                 },
                 getMRPMemo: function() {
                     return result.getValue('memo') || '';
+                },
+                getMRPStartDate: function() {
+                    return result.getValue('startdate') || '';
+                },
+                getMRPEndDate: function() {
+                    return result.getValue('enddate') || '';
                 }
                 // NOTE: tobeexpedited not available in Search API yet
                 // getMRPToBeExpedited: function() {
@@ -457,7 +470,8 @@ function(search, log, runtime) {
             let locationStock, locationOnOrder, locationBackordered, locationOnHand;
             let locationName, locationId, reorderPoint, maxStock;
             let suggestedQty, source, urgency;
-            
+            let mrpStartDate, mrpEndDate; // For MRP order dates
+
             if (isMRP) {
                 // MRP Planned Order data
                 locationStock = globalStock; // MRP uses global stock
@@ -470,6 +484,10 @@ function(search, log, runtime) {
                 reorderPoint = 0; // MRP doesn't use reorder points
                 maxStock = 0;
                 source = 'mrp';
+
+                // Get MRP order dates
+                mrpStartDate = result.getMRPStartDate();
+                mrpEndDate = result.getMRPEndDate();
                 
                 // NOTE: Can't determine MRP urgency until tobeexpedited is available in Search API
                 // For now, all MRP orders are 'low' urgency
@@ -553,6 +571,8 @@ function(search, log, runtime) {
                 preferredVendor: preferredVendor,
                 urgency: urgency,
                 source: source, // 'reorder', 'mrp', or 'stock_ok'
+                mrpOrderByDate: isMRP ? mrpStartDate : null, // MRP: When to order (startdate)
+                mrpDueDate: isMRP ? mrpEndDate : null, // MRP: When needed (enddate)
                 leadTime: 14 // TODO: Get from vendor performance record
             };
         });
