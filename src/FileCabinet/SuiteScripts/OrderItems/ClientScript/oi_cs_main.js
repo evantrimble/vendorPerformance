@@ -1,6 +1,15 @@
 /**
  * NetSuite Client Script for Order Items with Vendor Intelligence
- * VERSION: 3.13 - Fixed Compare Vendors URL parameter construction
+ * VERSION: 3.14 - MRP Order Dates Display
+ *
+ * Changes in v3.14:
+ * - NEW: MRP items now display "📅 Order by: [date]" instead of stock numbers
+ * - NEW: Added formatDate() function to format NetSuite dates (startdate)
+ * - Enhanced: Conditional display logic - MRP items show dates, reorder items show stock
+ * - Fixed: Issue #2 - MRP order dates now properly displayed
+ *
+ * Changes in v3.13:
+ * - Fixed: Compare Vendors URL parameter construction
  *
  * Changes in v3.12:
  * - Fixed: Quality rating now displays 2 decimal places (4.39 instead of 4.393435494294163)
@@ -1196,12 +1205,22 @@ function(runtime, url, dialog) {
                 '<div class="ns-table-cell">' + item.description + '</div>' +
                 // Column 5: Location (120px) - NEW SEPARATED COLUMN
                 '<div class="ns-table-cell">' + locationName + '</div>' +
-                // Column 6: Stock Status (140px) - NEW SEPARATED COLUMN
+                // Column 6: Stock Status / Order Date (140px) - Shows date for MRP, stock for reorder items
                 '<div class="ns-table-cell">' +
-                    '<div class="ns-stock-indicator">' +
-                        '<span class="ns-stock-dot ' + stockClass + '"></span>' +
-                        '<span>' + formatNumber(locationStock) + ' / ' + formatNumber(globalStock) + '</span>' +
-                    '</div>' +
+                    (item.source === 'mrp' ?
+                        // MRP items: Show order date
+                        (item.mrpOrderByDate ?
+                            '<div class="ns-mrp-date">' +
+                                '<span>📅 Order by: ' + formatDate(item.mrpOrderByDate) + '</span>' +
+                            '</div>' :
+                            '<div class="ns-mrp-date"><span>—</span></div>' // MRP with no date
+                        ) :
+                        // Reorder items: Show stock status
+                        '<div class="ns-stock-indicator">' +
+                            '<span class="ns-stock-dot ' + stockClass + '"></span>' +
+                            '<span>' + formatNumber(locationStock) + ' / ' + formatNumber(globalStock) + '</span>' +
+                        '</div>'
+                    ) +
                 '</div>' +
                 // Column 7: Suggested Qty (100px)
                 '<div class="ns-table-cell">' +
@@ -1812,6 +1831,31 @@ function(runtime, url, dialog) {
      */
     function formatNumber(num) {
         return Number(num).toLocaleString('en-US');
+    }
+
+    /**
+     * v3.14: NEW FUNCTION - Format dates for MRP order display
+     * Converts NetSuite date strings to readable format like "Oct 28, 2025"
+     * @param {string} dateString - Date in format YYYY-MM-DD or MM/DD/YYYY
+     * @returns {string} Formatted date like "Oct 28, 2025"
+     */
+    function formatDate(dateString) {
+        if (!dateString) return '';
+
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString; // Return original if invalid
+
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+            return months[date.getMonth()] + ' ' +
+                   date.getDate() + ', ' +
+                   date.getFullYear();
+        } catch (e) {
+            console.error('Error formatting date:', e);
+            return dateString;
+        }
     }
 
     function showLoadingState(show) {
