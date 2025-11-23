@@ -185,7 +185,7 @@ function(runtime, url, dialog) {
         const filterMap = {
             'critical': 'critical',
             'below-reorder': 'reorder',
-            'mrp-suggested': 'mrp'
+            'mrp-released': 'mrp'
         };
         
         if (filterMap[filter]) {

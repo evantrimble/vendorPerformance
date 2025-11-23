@@ -473,7 +473,7 @@ function(serverWidget, file, search, runtime, url, log) {
                     <option value="all">All Items</option>
                     <option value="critical">Critical Stock</option>
                     <option value="reorder">Below Reorder Point</option>
-                    <option value="mrp">MRP Suggested</option>
+                    <option value="mrp">MRP Released</option>
                 </select>
                 <button type="button" class="ns-btn ns-btn-primary" id="create-po-btn" disabled>🛒 Create PO (0)</button>
             </div>
@@ -497,10 +497,10 @@ function(serverWidget, file, search, runtime, url, log) {
                 <div class="ns-text-2xl ns-font-bold" id="reorder-count">0</div>
                 <div class="ns-text-xs ns-text-muted">items</div>
             </div>
-            <div class="ns-card" data-filter="mrp-suggested" style="cursor: pointer;">
+            <div class="ns-card" data-filter="mrp-released" style="cursor: pointer;">
                 <div class="ns-flex ns-items-center ns-gap-2 ns-mb-2">
                     <span class="ns-perf-dot ns-perf-dot-good"></span>
-                    <span class="ns-text-sm ns-text-muted">MRP Suggested</span>
+                    <span class="ns-text-sm ns-text-muted">MRP Released</span>
                 </div>
                 <div class="ns-text-2xl ns-font-bold" id="mrp-count">0</div>
                 <div class="ns-text-xs ns-text-muted">items</div>
