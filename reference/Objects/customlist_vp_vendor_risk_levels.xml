@@ -1,0 +1,23 @@
+<customlist scriptid="customlist_vp_vendor_risk_levels">
+  <name>Vendor Performance Risk Levels</name>
+  <description>Risk level categories for vendor performance</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <customvalues>
+    <customvalue scriptid="val_vp_risk_low">
+      <value>Low</value>
+      <abbreviation>L</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vp_risk_medium">
+      <value>Medium</value>
+      <abbreviation>M</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vp_risk_high">
+      <value>High</value>
+      <abbreviation>H</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

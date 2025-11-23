@@ -1,0 +1,28 @@
+<customlist scriptid="customlist_vr_vendor_risk_alert_types">
+  <name>Vendor Risk Alert Types</name>
+  <description>Types of risk alerts for vendor performance</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <customvalues>
+    <customvalue scriptid="val_vr_alert_delivery">
+      <value>Delivery</value>
+      <abbreviation>DEL</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vr_alert_quality">
+      <value>Quality</value>
+      <abbreviation>QLT</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vr_alert_price">
+      <value>Price</value>
+      <abbreviation>PRC</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vr_alert_compliance">
+      <value>Compliance</value>
+      <abbreviation>CMP</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

@@ -1,0 +1,23 @@
+<customlist scriptid="customlist_vt_vendor_trend_direction">
+  <name>Vendor Trend Direction</name>
+  <description>Direction of vendor performance trends</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <customvalues>
+    <customvalue scriptid="val_vt_improving">
+      <value>Improving</value>
+      <abbreviation>UP</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vt_stable">
+      <value>Stable</value>
+      <abbreviation>ST</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vt_declining">
+      <value>Declining</value>
+      <abbreviation>DN</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

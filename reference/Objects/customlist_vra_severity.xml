@@ -1,0 +1,28 @@
+<customlist scriptid="customlist_vra_severity">
+  <name>Vendor Risk Alert Severity</name>
+  <description>Severity levels for vendor risk alerts</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <customvalues>
+    <customvalue scriptid="val_vra_sev_low">
+      <value>Low</value>
+      <abbreviation>L</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vra_sev_medium">
+      <value>Medium</value>
+      <abbreviation>M</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vra_sev_high">
+      <value>High</value>
+      <abbreviation>H</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vra_sev_critical">
+      <value>Critical</value>
+      <abbreviation>C</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

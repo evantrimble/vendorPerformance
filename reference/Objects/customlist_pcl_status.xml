@@ -1,0 +1,28 @@
+<customlist scriptid="customlist_pcl_status">
+  <name>Performance Calculation Log Status</name>
+  <description>Status values for performance calculation log entries</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <customvalues>
+    <customvalue scriptid="val_pcl_pending">
+      <value>Pending</value>
+      <abbreviation>P</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_pcl_running">
+      <value>Running</value>
+      <abbreviation>R</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_pcl_completed">
+      <value>Completed</value>
+      <abbreviation>C</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_pcl_failed">
+      <value>Failed</value>
+      <abbreviation>F</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

@@ -1,0 +1,14 @@
+<manifest projecttype="ACCOUNTCUSTOMIZATION">
+  <projectname>venprfmrnc</projectname>
+  <frameworkversion>1.0</frameworkversion>
+  <dependencies>
+    <features>
+      <feature required="true">CUSTOMRECORDS</feature>
+      <feature required="true">SUPPORT</feature>
+      <feature required="false">CUSTOMSEGMENTS</feature>
+      <feature required="false">EXTREMELIST</feature>
+      <feature required="false">MAILMERGE</feature>
+      <feature required="false">MULTILANGUAGE</feature>
+    </features>
+  </dependencies>
+</manifest>

@@ -1,0 +1,28 @@
+<customlist scriptid="customlist_vra_alert_status">
+  <name>Vendor Risk Alert Status</name>
+  <description>Status values for vendor risk alerts</description>
+  <isinactive>F</isinactive>
+  <isordered>F</isordered>
+  <customvalues>
+    <customvalue scriptid="val_vra_status_open">
+      <value>Open</value>
+      <abbreviation>O</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vra_status_acknowledged">
+      <value>Acknowledged</value>
+      <abbreviation>A</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vra_status_resolved">
+      <value>Resolved</value>
+      <abbreviation>R</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+    <customvalue scriptid="val_vra_status_dismissed">
+      <value>Dismissed</value>
+      <abbreviation>D</abbreviation>
+      <isinactive>F</isinactive>
+    </customvalue>
+  </customvalues>
+</customlist>

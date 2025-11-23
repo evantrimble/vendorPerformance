@@ -1,0 +1,224 @@
+<customrecordtype scriptid="customrecord_perf_calc_log">
+    <accesstype>CUSTRECORDENTRYPERM</accesstype>
+    <allowattachments>false</allowattachments>
+    <allowinlineediting>false</allowinlineediting>
+    <allowinlinedeleting>false</allowinlinedeleting>
+    <allowmobileaccess>false</allowmobileaccess>
+    <allowuiaccess>true</allowuiaccess>
+    <description>Log of performance calculation script executions for monitoring and troubleshooting</description>
+    <enablele>false</enablele>
+    <hidetitlefield>false</hidetitlefield>
+    <includename>true</includename>
+    <istaxable>false</istaxable>
+    <recordname>Performance Calculation Log</recordname>
+    <showid>true</showid>
+    <customrecordcustomfields>
+        <!-- Execution Metadata -->
+        <customrecordcustomfield scriptid="custrecord_pcl_execution_date">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>true</dynamicdefault>
+            <fieldtype>DATETIMETZ</fieldtype>
+            <help>When the calculation script was executed</help>
+            <label>Execution Date</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_pcl_analysis_period">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <defaultvalue>90</defaultvalue>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of days analyzed in this run</help>
+            <label>Analysis Period (Days)</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Processing Results -->
+        <customrecordcustomfield scriptid="custrecord_pcl_vendors_processed">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of vendors processed in this run</help>
+            <label>Vendors Processed</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_pcl_high_risk_vendors">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of high-risk vendors identified</help>
+            <label>High Risk Vendors Found</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_pcl_errors">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of errors encountered during processing</help>
+            <label>Error Count</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Performance Metrics -->
+        <customrecordcustomfield scriptid="custrecord_pcl_execution_time">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Total execution time for the calculation</help>
+            <label>Execution Time (Seconds)</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Status and Error Details -->
+        <customrecordcustomfield scriptid="custrecord_pcl_status">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Overall status of the calculation run</help>
+            <label>Status</label>
+            <mandatory>true</mandatory>
+            <selectoptions>
+                <selectoption>
+                    <text>Success</text>
+                    <value>SUCCESS</value>
+                </selectoption>
+                <selectoption>
+                    <text>Partial Success</text>
+                    <value>PARTIAL_SUCCESS</value>
+                </selectoption>
+                <selectoption>
+                    <text>Failed</text>
+                    <value>FAILED</value>
+                </selectoption>
+                <selectoption>
+                    <text>Running</text>
+                    <value>RUNNING</value>
+                </selectoption>
+            </selectoptions>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_pcl_error_details">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>LONGTEXT</fieldtype>
+            <help>Detailed error information if any errors occurred</help>
+            <label>Error Details</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Additional Metrics -->
+        <customrecordcustomfield scriptid="custrecord_pcl_records_created">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of performance records created</help>
+            <label>Records Created</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_pcl_records_updated">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of performance records updated</help>
+            <label>Records Updated</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_pcl_alerts_generated">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of risk alerts generated</help>
+            <label>Alerts Generated</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+    
+    <!-- Custom Record Tabs -->
+    <customrecordtabs>
+        <customrecordtab scriptid="custrecord_pcl_tab_execution">
+            <label>Execution Summary</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_pcl_execution_date</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_analysis_period</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_vendors_processed</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_execution_time</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_status</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+        <customrecordtab scriptid="custrecord_pcl_tab_results">
+            <label>Results</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_pcl_records_created</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_records_updated</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_high_risk_vendors</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_alerts_generated</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+        <customrecordtab scriptid="custrecord_pcl_tab_errors">
+            <label>Errors</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_pcl_errors</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_pcl_error_details</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+    </customrecordtabs>
+</customrecordtype>

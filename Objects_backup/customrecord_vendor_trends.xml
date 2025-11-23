@@ -1,0 +1,212 @@
+<customrecordtype scriptid="customrecord_vendor_trends">
+    <accesstype>CUSTRECORDENTRYPERM</accesstype>
+    <allowattachments>false</allowattachments>
+    <allowinlineediting>false</allowinlineediting>
+    <allowinlinedeleting>false</allowinlinedeleting>
+    <allowmobileaccess>false</allowmobileaccess>
+    <allowuiaccess>true</allowuiaccess>
+    <description>Historical trend data comparing vendor performance between periods</description>
+    <enablele>false</enablele>
+    <hidetitlefield>false</hidetitlefield>
+    <includename>true</includename>
+    <istaxable>false</istaxable>
+    <recordname>Vendor Performance Trends</recordname>
+    <showid>true</showid>
+    <customrecordcustomfields>
+        <!-- Vendor Reference -->
+        <customrecordcustomfield scriptid="custrecord_vt_vendor">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Reference to the vendor record</help>
+            <label>Vendor</label>
+            <mandatory>true</mandatory>
+            <selectrecordtype>vendor</selectrecordtype>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Comparison Metadata -->
+        <customrecordcustomfield scriptid="custrecord_vt_comparison_date">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>DATE</fieldtype>
+            <help>Date when this trend comparison was calculated</help>
+            <label>Comparison Date</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_current_period_days">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <defaultvalue>90</defaultvalue>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Length of current analysis period</help>
+            <label>Current Period (Days)</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_previous_period_days">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <defaultvalue>90</defaultvalue>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Length of previous analysis period for comparison</help>
+            <label>Previous Period (Days)</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Trend Calculations -->
+        <customrecordcustomfield scriptid="custrecord_vt_otd_trend">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Change in on-time delivery rate (positive = improvement)</help>
+            <label>OTD Trend</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_quality_trend">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>FLOAT</fieldtype>
+            <help>Change in quality rating (positive = improvement)</help>
+            <label>Quality Trend</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_defect_trend">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Change in defect rate (negative = improvement)</help>
+            <label>Defect Rate Trend</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_price_trend">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Change in price variance (negative = improvement)</help>
+            <label>Price Trend</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_leadtime_trend">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Change in average lead time (negative = improvement)</help>
+            <label>Lead Time Trend (Days)</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Overall Trend Indicators -->
+        <customrecordcustomfield scriptid="custrecord_vt_overall_trend">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Overall performance trend assessment</help>
+            <label>Overall Trend</label>
+            <mandatory>true</mandatory>
+            <selectoptions>
+                <selectoption>
+                    <text>Improving</text>
+                    <value>IMPROVING</value>
+                </selectoption>
+                <selectoption>
+                    <text>Stable</text>
+                    <value>STABLE</value>
+                </selectoption>
+                <selectoption>
+                    <text>Declining</text>
+                    <value>DECLINING</value>
+                </selectoption>
+            </selectoptions>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vt_risk_change">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Change in risk score (negative = improvement)</help>
+            <label>Risk Score Change</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+    
+    <!-- Custom Record Tabs -->
+    <customrecordtabs>
+        <customrecordtab scriptid="custrecord_vt_tab_trends">
+            <label>Performance Trends</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vt_otd_trend</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vt_quality_trend</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vt_defect_trend</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vt_price_trend</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vt_leadtime_trend</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+        <customrecordtab scriptid="custrecord_vt_tab_summary">
+            <label>Trend Summary</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vt_overall_trend</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vt_risk_change</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+    </customrecordtabs>
+</customrecordtype>

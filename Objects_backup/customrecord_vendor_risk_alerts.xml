@@ -1,0 +1,263 @@
+<customrecordtype scriptid="customrecord_vendor_risk_alerts">
+    <accesstype>CUSTRECORDENTRYPERM</accesstype>
+    <allowattachments>true</allowattachments>
+    <allowinlineediting>true</allowinlineediting>
+    <allowinlinedeleting>false</allowinlinedeleting>
+    <allowmobileaccess>true</allowmobileaccess>
+    <allowuiaccess>true</allowuiaccess>
+    <description>Risk alerts and notifications for vendor performance issues</description>
+    <enablele>false</enablele>
+    <hidetitlefield>false</hidetitlefield>
+    <includename>true</includename>
+    <istaxable>false</istaxable>
+    <recordname>Vendor Risk Alerts</recordname>
+    <showid>true</showid>
+    <customrecordcustomfields>
+        <!-- Vendor Reference -->
+        <customrecordcustomfield scriptid="custrecord_vra_vendor">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Vendor associated with this alert</help>
+            <label>Vendor</label>
+            <mandatory>true</mandatory>
+            <selectrecordtype>vendor</selectrecordtype>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Alert Metadata -->
+        <customrecordcustomfield scriptid="custrecord_vra_alert_date">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>true</dynamicdefault>
+            <fieldtype>DATETIMETZ</fieldtype>
+            <help>When this alert was generated</help>
+            <label>Alert Date</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vra_alert_type">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Type of performance issue triggering alert</help>
+            <label>Alert Type</label>
+            <mandatory>true</mandatory>
+            <selectoptions>
+                <selectoption>
+                    <text>On-Time Delivery</text>
+                    <value>ON_TIME_DELIVERY</value>
+                </selectoption>
+                <selectoption>
+                    <text>Quality Rating</text>
+                    <value>QUALITY_RATING</value>
+                </selectoption>
+                <selectoption>
+                    <text>Defect Rate</text>
+                    <value>DEFECT_RATE</value>
+                </selectoption>
+                <selectoption>
+                    <text>Price Variance</text>
+                    <value>PRICE_VARIANCE</value>
+                </selectoption>
+                <selectoption>
+                    <text>Multiple Issues</text>
+                    <value>MULTIPLE_ISSUES</value>
+                </selectoption>
+                <selectoption>
+                    <text>Lead Time</text>
+                    <value>LEAD_TIME</value>
+                </selectoption>
+            </selectoptions>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vra_severity">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Alert severity level</help>
+            <label>Severity</label>
+            <mandatory>true</mandatory>
+            <selectoptions>
+                <selectoption>
+                    <text>Low</text>
+                    <value>LOW</value>
+                </selectoption>
+                <selectoption>
+                    <text>Medium</text>
+                    <value>MEDIUM</value>
+                </selectoption>
+                <selectoption>
+                    <text>High</text>
+                    <value>HIGH</value>
+                </selectoption>
+                <selectoption>
+                    <text>Critical</text>
+                    <value>CRITICAL</value>
+                </selectoption>
+            </selectoptions>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Alert Details -->
+        <customrecordcustomfield scriptid="custrecord_vra_description">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>TEXTAREA</fieldtype>
+            <help>Detailed description of the performance issue</help>
+            <label>Alert Description</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vra_threshold_value">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>FLOAT</fieldtype>
+            <help>The threshold value that was breached</help>
+            <label>Threshold Value</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vra_actual_value">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>FLOAT</fieldtype>
+            <help>The actual performance value that triggered alert</help>
+            <label>Actual Value</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Alert Status -->
+        <customrecordcustomfield scriptid="custrecord_vra_status">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <defaultvalue>ACTIVE</defaultvalue>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Current status of this alert</help>
+            <label>Status</label>
+            <mandatory>true</mandatory>
+            <selectoptions>
+                <selectoption>
+                    <text>Active</text>
+                    <value>ACTIVE</value>
+                </selectoption>
+                <selectoption>
+                    <text>Acknowledged</text>
+                    <value>ACKNOWLEDGED</value>
+                </selectoption>
+                <selectoption>
+                    <text>Resolved</text>
+                    <value>RESOLVED</value>
+                </selectoption>
+                <selectoption>
+                    <text>Dismissed</text>
+                    <value>DISMISSED</value>
+                </selectoption>
+            </selectoptions>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Acknowledgment Fields -->
+        <customrecordcustomfield scriptid="custrecord_vra_acknowledged_by">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Employee who acknowledged this alert</help>
+            <label>Acknowledged By</label>
+            <mandatory>false</mandatory>
+            <selectrecordtype>employee</selectrecordtype>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vra_acknowledged_date">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>DATETIMETZ</fieldtype>
+            <help>When this alert was acknowledged</help>
+            <label>Acknowledged Date</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vra_resolution_notes">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>TEXTAREA</fieldtype>
+            <help>Notes about how this issue was resolved</help>
+            <label>Resolution Notes</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+    
+    <!-- Custom Record Tabs -->
+    <customrecordtabs>
+        <customrecordtab scriptid="custrecord_vra_tab_alert">
+            <label>Alert Details</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vra_alert_type</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_severity</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_description</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_threshold_value</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_actual_value</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+        <customrecordtab scriptid="custrecord_vra_tab_resolution">
+            <label>Resolution</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vra_status</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_acknowledged_by</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_acknowledged_date</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vra_resolution_notes</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+    </customrecordtabs>
+</customrecordtype>

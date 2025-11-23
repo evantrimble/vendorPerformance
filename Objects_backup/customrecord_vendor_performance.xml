@@ -1,0 +1,339 @@
+<customrecordtype scriptid="customrecord_vendor_performance">
+    <accesstype>CUSTRECORDENTRYPERM</accesstype>
+    <allowattachments>false</allowattachments>
+    <allowinlineediting>false</allowinlineediting>
+    <allowinlinedeleting>false</allowinlinedeleting>
+    <allowmobileaccess>true</allowmobileaccess>
+    <allowuiaccess>true</allowuiaccess>
+    <description>Store calculated vendor performance metrics and trends for vendor intelligence system</description>
+    <enablele>false</enablele>
+    <hidetitlefield>false</hidetitlefield>
+    <includename>true</includename>
+    <istaxable>false</istaxable>
+    <recordname>Vendor Performance Metrics</recordname>
+    <showid>true</showid>
+    <customrecordcustomfields>
+        <!-- Vendor Reference -->
+        <customrecordcustomfield scriptid="custrecord_vp_vendor">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Reference to the vendor record this performance data applies to</help>
+            <label>Vendor</label>
+            <mandatory>true</mandatory>
+            <selectrecordtype>vendor</selectrecordtype>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Item Reference (Optional) -->
+        <customrecordcustomfield scriptid="custrecord_vp_item">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Optional item-specific metrics (leave blank for overall vendor metrics)</help>
+            <label>Item</label>
+            <mandatory>false</mandatory>
+            <selectrecordtype>item</selectrecordtype>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Calculation Metadata -->
+        <customrecordcustomfield scriptid="custrecord_vp_calculation_date">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>DATE</fieldtype>
+            <help>Date when these metrics were calculated</help>
+            <label>Calculation Date</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_analysis_period_days">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <defaultvalue>90</defaultvalue>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of days analyzed for these metrics (e.g., 90)</help>
+            <label>Analysis Period (Days)</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Delivery Performance Metrics -->
+        <customrecordcustomfield scriptid="custrecord_vp_otd_percent">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Percentage of deliveries made on or before due date</help>
+            <label>On-Time Delivery Rate</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_avg_lead_time">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Average actual lead time from PO to receipt</help>
+            <label>Average Lead Time (Days)</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_quoted_lead_time">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Average quoted lead time for comparison</help>
+            <label>Average Quoted Lead Time (Days)</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Quality Metrics -->
+        <customrecordcustomfield scriptid="custrecord_vp_quality_rating">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>FLOAT</fieldtype>
+            <help>Quality rating on 1-5 scale based on receipts and returns</help>
+            <label>Quality Rating</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_defect_rate">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Percentage of items received with defects or requiring returns</help>
+            <label>Defect Rate</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Cost Performance Metrics -->
+        <customrecordcustomfield scriptid="custrecord_vp_price_variance">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Price variance vs historical average (positive = increase)</help>
+            <label>Price Variance</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_cost_stability">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>PERCENT</fieldtype>
+            <help>Score indicating price stability over time (higher = more stable)</help>
+            <label>Cost Stability Score</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Risk Assessment -->
+        <customrecordcustomfield scriptid="custrecord_vp_risk_score">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Overall risk score 0-100 (higher = more risk)</help>
+            <label>Risk Score</label>
+            <mandatory>true</mandatory>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_risk_level">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>SELECT</fieldtype>
+            <help>Categorized risk level</help>
+            <label>Risk Level</label>
+            <mandatory>true</mandatory>
+            <selectoptions>
+                <selectoption>
+                    <text>Low</text>
+                    <value>LOW</value>
+                </selectoption>
+                <selectoption>
+                    <text>Medium</text>
+                    <value>MEDIUM</value>
+                </selectoption>
+                <selectoption>
+                    <text>High</text>
+                    <value>HIGH</value>
+                </selectoption>
+            </selectoptions>
+            <showinlist>true</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Volume Metrics -->
+        <customrecordcustomfield scriptid="custrecord_vp_total_orders">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>INTEGER</fieldtype>
+            <help>Number of purchase orders included in analysis</help>
+            <label>Total Orders Analyzed</label>
+            <mandatory>true</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_total_value">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>CURRENCY</fieldtype>
+            <help>Total value of orders in analysis period</help>
+            <label>Total Order Value</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_avg_order_value">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>CURRENCY</fieldtype>
+            <help>Average value per purchase order</help>
+            <label>Average Order Value</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Communication Metrics -->
+        <customrecordcustomfield scriptid="custrecord_vp_response_time_hours">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>FLOAT</fieldtype>
+            <help>Average response time to communications</help>
+            <label>Avg Response Time (Hours)</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <!-- Tracking Fields -->
+        <customrecordcustomfield scriptid="custrecord_vp_last_order_date">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>DATE</fieldtype>
+            <help>Date of most recent purchase order</help>
+            <label>Last Order Date</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+        
+        <customrecordcustomfield scriptid="custrecord_vp_order_frequency">
+            <accesslevel>2</accesslevel>
+            <applyformatting>false</applyformatting>
+            <defaultchecked>false</defaultchecked>
+            <displaytype>NORMAL</displaytype>
+            <dynamicdefault>false</dynamicdefault>
+            <fieldtype>FLOAT</fieldtype>
+            <help>Average number of orders per month</help>
+            <label>Order Frequency (per month)</label>
+            <mandatory>false</mandatory>
+            <showinlist>false</showinlist>
+            <storevalue>true</storevalue>
+        </customrecordcustomfield>
+    </customrecordcustomfields>
+    
+    <!-- Custom Record Tabs -->
+    <customrecordtabs>
+        <customrecordtab scriptid="custrecord_vp_tab_performance">
+            <label>Performance Metrics</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vp_otd_percent</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_avg_lead_time</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_quoted_lead_time</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_quality_rating</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_defect_rate</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+        <customrecordtab scriptid="custrecord_vp_tab_cost">
+            <label>Cost Analysis</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vp_price_variance</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_cost_stability</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_total_value</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_avg_order_value</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+        <customrecordtab scriptid="custrecord_vp_tab_risk">
+            <label>Risk Assessment</label>
+            <custrecordcustomfields>
+                <custrecordcustomfield>custrecord_vp_risk_score</custrecordcustomfield>
+                <custrecordcustomfield>custrecord_vp_risk_level</custrecordcustomfield>
+            </custrecordcustomfields>
+        </customrecordtab>
+    </customrecordtabs>
+</customrecordtype>
