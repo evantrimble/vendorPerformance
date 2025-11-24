@@ -703,8 +703,8 @@ function(runtime, url, dialog) {
                 }
             }
 
-            // Cache vendors for this item (same vendors for all locations in same subsidiary)
-            state.vendorCache.set(item.id, vendors);
+            // Cache vendors by composite key (item-location specific)
+            state.vendorCache.set(rowCompositeKey, vendors);
         });
 
         console.log('All vendor dropdowns populated');
@@ -821,25 +821,20 @@ function(runtime, url, dialog) {
             return null;
         }
 
-        // Parse composite key to get item ID
-        const parts = compositeKey.split('-');
-        const itemId = parts[0];
-
         // DEBUG: Log cache lookup
         console.log('[DEBUG] getSelectedVendorFromDropdown for compositeKey:', compositeKey);
-        console.log('[DEBUG] - Parsed itemId:', itemId);
         console.log('[DEBUG] - Selected vendorId from dropdown:', selectedVendorId);
 
-        // Look up vendor in cache
-        const vendors = state.vendorCache.get(itemId);
+        // Look up vendor in cache using composite key (item-location specific)
+        const vendors = state.vendorCache.get(compositeKey);
         if (!vendors) {
-            console.warn('No vendors in cache for item:', itemId);
+            console.warn('No vendors in cache for composite key:', compositeKey);
             console.log('[DEBUG] - Cache keys available:', Array.from(state.vendorCache.keys()));
             return null;
         }
 
         // DEBUG: Show what's in the cache
-        console.log('[DEBUG] - Found', vendors.length, 'vendors in cache for item', itemId);
+        console.log('[DEBUG] - Found', vendors.length, 'vendors in cache for composite key', compositeKey);
         console.log('[DEBUG] - Vendor IDs in cache:', vendors.map(function(v) { return v.id + ' (' + v.name + ')'; }));
 
         const vendor = vendors.find(function(v) { return v.id === selectedVendorId; });
