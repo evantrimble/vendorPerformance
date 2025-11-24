@@ -825,19 +825,40 @@ function(runtime, url, dialog) {
         const parts = compositeKey.split('-');
         const itemId = parts[0];
 
+        // DEBUG: Log cache lookup
+        console.log('[DEBUG] getSelectedVendorFromDropdown for compositeKey:', compositeKey);
+        console.log('[DEBUG] - Parsed itemId:', itemId);
+        console.log('[DEBUG] - Selected vendorId from dropdown:', selectedVendorId);
+
         // Look up vendor in cache
         const vendors = state.vendorCache.get(itemId);
         if (!vendors) {
             console.warn('No vendors in cache for item:', itemId);
+            console.log('[DEBUG] - Cache keys available:', Array.from(state.vendorCache.keys()));
             return null;
         }
+
+        // DEBUG: Show what's in the cache
+        console.log('[DEBUG] - Found', vendors.length, 'vendors in cache for item', itemId);
+        console.log('[DEBUG] - Vendor IDs in cache:', vendors.map(function(v) { return v.id + ' (' + v.name + ')'; }));
 
         const vendor = vendors.find(function(v) { return v.id === selectedVendorId; });
         if (!vendor) {
             console.warn('Selected vendor not found in cache:', selectedVendorId);
+            console.log('[DEBUG] - Looking for vendor ID:', selectedVendorId, 'Type:', typeof selectedVendorId);
+            console.log('[DEBUG] - Cache vendor ID types:', vendors.map(function(v) { return typeof v.id; }));
+            console.log('[DEBUG] - Trying string comparison...');
+
+            // Try both string and number comparison
+            const vendorByString = vendors.find(function(v) { return String(v.id) === String(selectedVendorId); });
+            if (vendorByString) {
+                console.log('[DEBUG] - FOUND with string comparison! Vendor:', vendorByString.name);
+                return vendorByString;
+            }
             return null;
         }
 
+        console.log('[DEBUG] - Successfully found vendor:', vendor.name, 'ID:', vendor.id);
         return vendor;
     }
 
