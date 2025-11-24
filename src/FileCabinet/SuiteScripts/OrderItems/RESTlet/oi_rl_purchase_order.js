@@ -1,12 +1,16 @@
 /**
  * NetSuite RESTlet for Purchase Order Creation
  * Handles creating purchase orders from selected items
- * 
+ *
  * @NApiVersion 2.1
  * @NScriptType RESTlet
  * @NModuleScope Public
- * 
+ *
  * Version History:
+ * v2.1 (2025-11-24) - CRITICAL FIX: Convert string IDs to integers for NetSuite dynamic records
+ *                   - Added parseInt() for vendor, location, item, quantity, currency, terms
+ *                   - Fixes "Invalid Field Value" and "Please enter value(s) for: Location" errors
+ *                   - NetSuite's isDynamic: true requires integer IDs, not strings
  * v2.0 (2025-10-21) - Enhanced error handling with detailed item/vendor info
  *                   - Added support for edited prices (rate parameter)
  *                   - Added support for location parameter
@@ -23,10 +27,10 @@
  * 5. Verify all 4 HTTP methods are enabled (GET, POST, PUT, DELETE)
  */
 
-define(['N/record', 'N/search', 'N/log', 'N/runtime', 'N/format'], 
+define(['N/record', 'N/search', 'N/log', 'N/runtime', 'N/format'],
 function(record, search, log, runtime, format) {
 
-    const SCRIPT_VERSION = '2.0';
+    const SCRIPT_VERSION = '2.1';
 
     /**
      * Handle POST requests for PO creation
@@ -202,13 +206,13 @@ function(record, search, log, runtime, format) {
         });
 
         // Set header fields
-        purchaseOrder.setValue('entity', vendorId);
+        purchaseOrder.setValue('entity', parseInt(vendorId, 10));
         purchaseOrder.setValue('trandate', new Date());
         
         // Set terms if available from vendor
         if (vendorInfo.terms) {
             try {
-                purchaseOrder.setValue('terms', vendorInfo.terms);
+                purchaseOrder.setValue('terms', parseInt(vendorInfo.terms, 10));
                 log.debug('Set Terms', vendorInfo.terms);
             } catch (e) {
                 log.debug('Could not set terms', e.message);
@@ -218,7 +222,7 @@ function(record, search, log, runtime, format) {
         // Set currency if available from vendor
         if (vendorInfo.currency) {
             try {
-                purchaseOrder.setValue('currency', vendorInfo.currency);
+                purchaseOrder.setValue('currency', parseInt(vendorInfo.currency, 10));
                 log.debug('Set Currency', vendorInfo.currency);
             } catch (e) {
                 log.debug('Could not set currency', e.message);
@@ -240,7 +244,7 @@ function(record, search, log, runtime, format) {
         
         if (location) {
             try {
-                purchaseOrder.setValue('location', location);
+                purchaseOrder.setValue('location', parseInt(location, 10));
                 log.debug('Set Location Successfully', location);
             } catch (e) {
                 log.debug('Could not set location', 'Location: ' + location + ', Error: ' + e.message);
@@ -281,8 +285,8 @@ function(record, search, log, runtime, format) {
             
             // Add line
             purchaseOrder.selectNewLine('item');
-            purchaseOrder.setCurrentSublistValue('item', 'item', item.itemId);
-            purchaseOrder.setCurrentSublistValue('item', 'quantity', item.quantity);
+            purchaseOrder.setCurrentSublistValue('item', 'item', parseInt(item.itemId, 10));
+            purchaseOrder.setCurrentSublistValue('item', 'quantity', parseInt(item.quantity, 10));
             
             // Set rate if we have one
             if (rate > 0) {
@@ -292,7 +296,7 @@ function(record, search, log, runtime, format) {
             // Set location on line if provided
             if (item.location) {
                 try {
-                    purchaseOrder.setCurrentSublistValue('item', 'location', item.location);
+                    purchaseOrder.setCurrentSublistValue('item', 'location', parseInt(item.location, 10));
                     log.debug('Set line location', 'Line: ' + lineNum + ', Location: ' + item.location);
                 } catch (e) {
                     log.debug('Could not set line location', 'Item: ' + item.itemId + ', Error: ' + e.message);
