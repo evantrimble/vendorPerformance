@@ -1,6 +1,12 @@
 /**
  * NetSuite Client Script for Order Items with Vendor Intelligence
- * VERSION: 3.14 - MRP Order Dates Display
+ * VERSION: 3.15 - Fix Subsidiary-Specific Vendor Selection for PO Creation
+ *
+ * Changes in v3.15:
+ * - CRITICAL FIX: PO creation now reads dropdown's selected vendor instead of item.preferredVendor
+ * - NEW: Added getSelectedVendorFromDropdown() helper function
+ * - Fixed: Multi-subsidiary items now use correct preferred vendor for location's subsidiary
+ * - Fixed: Prevents "Can't create PO with Canada vendor for US location" errors
  *
  * Changes in v3.14:
  * - NEW: MRP items now display "Order: Dec 3" instead of stock numbers
@@ -796,6 +802,46 @@ function(runtime, url, dialog) {
     }
 
     /**
+     * v3.15: Get the currently selected vendor from dropdown
+     * Reads the dropdown's selected value instead of relying on item.preferredVendor
+     * This ensures we get the subsidiary-filtered preferred vendor
+     * @param {string} compositeKey - Item-location composite key (e.g., "1186-2")
+     * @returns {Object|null} Vendor object from cache, or null if not found
+     */
+    function getSelectedVendorFromDropdown(compositeKey) {
+        const selectElement = document.getElementById('vendor-select-' + compositeKey);
+        if (!selectElement) {
+            console.warn('Vendor dropdown not found for:', compositeKey);
+            return null;
+        }
+
+        const selectedVendorId = selectElement.value;
+        if (!selectedVendorId) {
+            console.warn('No vendor selected in dropdown for:', compositeKey);
+            return null;
+        }
+
+        // Parse composite key to get item ID
+        const parts = compositeKey.split('-');
+        const itemId = parts[0];
+
+        // Look up vendor in cache
+        const vendors = state.vendorCache.get(itemId);
+        if (!vendors) {
+            console.warn('No vendors in cache for item:', itemId);
+            return null;
+        }
+
+        const vendor = vendors.find(function(v) { return v.id === selectedVendorId; });
+        if (!vendor) {
+            console.warn('Selected vendor not found in cache:', selectedVendorId);
+            return null;
+        }
+
+        return vendor;
+    }
+
+    /**
      * Select a vendor for a specific row (handles duplicate items with different locations)
      * @param {HTMLElement} selectElement - The dropdown element that changed
      * @param {string} itemId - The item ID
@@ -1562,7 +1608,10 @@ function(runtime, url, dialog) {
             const editedData = state.editedItems[compositeKey] || {};
 
             const quantity = editedData.quantity !== undefined ? editedData.quantity : item.suggestedQty;
-            const selectedVendor = editedData.vendor || item.preferredVendor;
+
+            // v3.15 FIX: Read vendor from dropdown instead of item.preferredVendor
+            // This ensures we get the subsidiary-filtered preferred vendor
+            const selectedVendor = editedData.vendor || getSelectedVendorFromDropdown(compositeKey) || item.preferredVendor;
 
             // Use edited price if available, otherwise use vendor price
             let rate;
