@@ -229,27 +229,9 @@ function(record, search, log, runtime, format) {
             }
         }
         
-        // Set location - Priority: requestData.location > first item's location > user default > first active location
-        let location = null;
-        if (requestData && requestData.location) {
-            location = requestData.location;
-            log.debug('Using location from request', location);
-        } else if (items[0] && items[0].location) {
-            location = items[0].location;
-            log.debug('Using location from first item', location);
-        } else {
-            location = getDefaultLocation();
-            log.debug('Using default location', location);
-        }
-        
-        if (location) {
-            try {
-                purchaseOrder.setValue('location', parseInt(location, 10));
-                log.debug('Set Location Successfully', location);
-            } catch (e) {
-                log.debug('Could not set location', 'Location: ' + location + ', Error: ' + e.message);
-            }
-        }
+        // Note: Not setting header-level location - rely on line-level locations instead
+        // NetSuite will derive the header location from the line items
+        log.debug('Skipping header location', 'Will use line-level locations only');
         
         // Add memo/notes
         const memo = (requestData && requestData.notes) ? requestData.notes : 
