@@ -205,11 +205,17 @@ function(record, search, log, runtime, format) {
             isDynamic: true
         });
 
-        // Set header fields
+        // Set header fields in correct order for dynamic mode
+
+        // 1. Set vendor - this triggers subsidiary sourcing
         purchaseOrder.setValue('entity', parseInt(vendorId, 10));
         purchaseOrder.setValue('trandate', new Date());
-        
-        // Set terms if available from vendor
+
+        // 2. Explicitly get/confirm subsidiary (ensures sourcing completes)
+        const subsidiary = purchaseOrder.getValue('subsidiary');
+        log.debug('Subsidiary sourced from vendor', 'Subsidiary ID: ' + subsidiary);
+
+        // 3. Set terms and currency (subsidiary-dependent)
         if (vendorInfo.terms) {
             try {
                 purchaseOrder.setValue('terms', parseInt(vendorInfo.terms, 10));
@@ -218,8 +224,7 @@ function(record, search, log, runtime, format) {
                 log.debug('Could not set terms', e.message);
             }
         }
-        
-        // Set currency if available from vendor
+
         if (vendorInfo.currency) {
             try {
                 purchaseOrder.setValue('currency', parseInt(vendorInfo.currency, 10));
@@ -228,10 +233,30 @@ function(record, search, log, runtime, format) {
                 log.debug('Could not set currency', e.message);
             }
         }
-        
-        // Note: Not setting header-level location - rely on line-level locations instead
-        // NetSuite will derive the header location from the line items
-        log.debug('Skipping header location', 'Will use line-level locations only');
+
+        // 4. Set location AFTER subsidiary is confirmed (location requires subsidiary)
+        // Priority: requestData.location > first item's location > user default > first active location
+        let location = null;
+        if (requestData && requestData.location) {
+            location = requestData.location;
+            log.debug('Using location from request', location);
+        } else if (items[0] && items[0].location) {
+            location = items[0].location;
+            log.debug('Using location from first item', location);
+        } else {
+            location = getDefaultLocation();
+            log.debug('Using default location', location);
+        }
+
+        if (location) {
+            try {
+                purchaseOrder.setValue('location', parseInt(location, 10));
+                log.debug('Set Location Successfully', 'Location: ' + location + ', Subsidiary: ' + subsidiary);
+            } catch (e) {
+                log.error('Could not set location', 'Location: ' + location + ', Subsidiary: ' + subsidiary + ', Error: ' + e.message);
+                throw e; // Re-throw since location is mandatory
+            }
+        }
         
         // Add memo/notes
         const memo = (requestData && requestData.notes) ? requestData.notes : 
