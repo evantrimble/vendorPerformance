@@ -1644,7 +1644,7 @@ function(runtime, url, dialog) {
 
             // FIXED v3.10: Include location data
             // v3.17: Add subsidiary (from location mapping, not from vendor)
-            const locationId = item.location ? item.location.id : null;
+            // locationId already declared at line 1615 from composite key parsing
             const subsidiaryId = locationId ? state.locationSubsidiaryMap[locationId] : null;
 
             return {
