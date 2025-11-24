@@ -140,18 +140,28 @@ function(record, search, log, runtime, format) {
             
             if (!item.vendorId) {
                 const itemInfo = getItemName(item.itemId);
-                return { 
-                    isValid: false, 
+                return {
+                    isValid: false,
                     error: 'Vendor ID is required for item at index ' + i + ' (' + itemInfo + '). ' +
-                           'Please ensure a vendor is selected for this item.' 
+                           'Please ensure a vendor is selected for this item.'
                 };
             }
-            
+
+            if (!item.subsidiary) {
+                const itemInfo = getItemName(item.itemId);
+                return {
+                    isValid: false,
+                    error: 'Subsidiary is required for item at index ' + i + ' (' + itemInfo + '). ' +
+                           'Subsidiary must be provided to ensure correct PO creation.'
+                };
+            }
+
             // Log the validated item
-            log.debug('Validated Item ' + i, 'ItemId: ' + item.itemId + 
-                     ', VendorId: ' + item.vendorId + ', Qty: ' + item.quantity + 
+            log.debug('Validated Item ' + i, 'ItemId: ' + item.itemId +
+                     ', VendorId: ' + item.vendorId + ', Qty: ' + item.quantity +
                      (item.rate ? ', Rate: $' + item.rate : '') +
-                     (item.location ? ', Location: ' + item.location : ''));
+                     (item.location ? ', Location: ' + item.location : '') +
+                     (item.subsidiary ? ', Subsidiary: ' + item.subsidiary : ''));
         }
 
         return { isValid: true };
@@ -207,13 +217,22 @@ function(record, search, log, runtime, format) {
 
         // Set header fields in correct order for dynamic mode
 
-        // 1. Set vendor - this triggers subsidiary sourcing
+        // 1. Set subsidiary EXPLICITLY from item data (do NOT source from vendor)
+        // CRITICAL: Vendor may have multiple subsidiaries. We must use the subsidiary
+        // that matches the location, not the vendor's primary subsidiary.
+        let subsidiary = null;
+        if (items[0] && items[0].subsidiary) {
+            subsidiary = parseInt(items[0].subsidiary, 10);
+            purchaseOrder.setValue('subsidiary', subsidiary);
+            log.debug('Set subsidiary from item data', 'Subsidiary ID: ' + subsidiary);
+        } else {
+            log.error('Missing subsidiary', 'Item data does not include subsidiary. PO creation may fail.');
+        }
+
+        // 2. Set vendor and transaction date
         purchaseOrder.setValue('entity', parseInt(vendorId, 10));
         purchaseOrder.setValue('trandate', new Date());
-
-        // 2. Explicitly get/confirm subsidiary (ensures sourcing completes)
-        const subsidiary = purchaseOrder.getValue('subsidiary');
-        log.debug('Subsidiary sourced from vendor', 'Subsidiary ID: ' + subsidiary);
+        log.debug('Set vendor', 'Vendor ID: ' + vendorId + ', Subsidiary: ' + subsidiary);
 
         // 3. Set terms and currency (subsidiary-dependent)
         if (vendorInfo.terms) {

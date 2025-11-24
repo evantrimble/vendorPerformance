@@ -54,7 +54,8 @@ function(runtime, url, dialog) {
         comparisonModal: null,
         editedItems: {}, // Track edited quantities, prices, and vendor selections
         vendorCache: new Map(), // Cache vendor lists to avoid repeated API calls
-        vendorDetailsCache: {} // Cache detailed vendor performance data from expansions
+        vendorDetailsCache: {}, // Cache detailed vendor performance data from expansions
+        locationSubsidiaryMap: {} // Maps location IDs to subsidiary IDs
     };
 
     // DOM References
@@ -611,6 +612,10 @@ function(runtime, url, dialog) {
             if (data.success && data.vendors) {
                 console.log('Received vendor data for items:', Object.keys(data.vendors).length);
                 console.log('Location→Subsidiary map:', data.locationSubsidiaryMap);
+
+                // Store location→subsidiary mapping for PO creation
+                state.locationSubsidiaryMap = data.locationSubsidiaryMap || {};
+
                 populateAllVendorDropdowns(data.vendors, data.locationSubsidiaryMap);
             } else {
                 throw new Error(data.error || 'Invalid response from vendor subsidiary API');
@@ -1638,12 +1643,17 @@ function(runtime, url, dialog) {
             }
 
             // FIXED v3.10: Include location data
+            // v3.17: Add subsidiary (from location mapping, not from vendor)
+            const locationId = item.location ? item.location.id : null;
+            const subsidiaryId = locationId ? state.locationSubsidiaryMap[locationId] : null;
+
             return {
                 itemId: itemId,
                 quantity: quantity,
                 vendorId: selectedVendor.id,
                 rate: rate,
-                location: item.location ? item.location.id : null
+                location: locationId,
+                subsidiary: subsidiaryId
             };
         }).filter(function(item) {
             return item !== null; // Remove any nulls from items not found
