@@ -325,17 +325,17 @@ function(record, search, log, runtime, format) {
             if (rate > 0) {
                 purchaseOrder.setCurrentSublistValue('item', 'rate', rate);
             }
-            
-            // Set location on line if provided
+
+            // Set inventory location on line if provided (for inventory items)
             if (item.location) {
                 try {
-                    purchaseOrder.setCurrentSublistValue('item', 'location', parseInt(item.location, 10));
-                    log.debug('Set line location', 'Line: ' + lineNum + ', Location: ' + item.location);
+                    purchaseOrder.setCurrentSublistValue('item', 'inventorylocation', parseInt(item.location, 10));
+                    log.debug('Set line inventory location', 'Line: ' + lineNum + ', Inventory Location: ' + item.location);
                 } catch (e) {
-                    log.debug('Could not set line location', 'Item: ' + item.itemId + ', Error: ' + e.message);
+                    log.debug('Could not set line inventory location', 'Item: ' + item.itemId + ', Error: ' + e.message);
                 }
             }
-            
+
             // Set description if available
             if (itemDetails.description) {
                 purchaseOrder.setCurrentSublistValue('item', 'description', itemDetails.description);
