@@ -208,28 +208,29 @@ function(record, search, log, runtime, format) {
         // Get vendor information
         const vendorInfo = getVendorInfo(vendorId);
         log.debug('Vendor Info', JSON.stringify(vendorInfo));
-        
-        // Create the purchase order record
-        const purchaseOrder = record.create({
-            type: record.Type.PURCHASE_ORDER,
-            isDynamic: true
-        });
 
-        // Set header fields in correct order for dynamic mode
-
-        // 1. Set subsidiary EXPLICITLY from item data (do NOT source from vendor)
-        // CRITICAL: Vendor may have multiple subsidiaries. We must use the subsidiary
-        // that matches the location, not the vendor's primary subsidiary.
+        // Get subsidiary from item data (MUST be set at record creation time)
         let subsidiary = null;
         if (items[0] && items[0].subsidiary) {
             subsidiary = parseInt(items[0].subsidiary, 10);
-            purchaseOrder.setValue('subsidiary', subsidiary);
-            log.debug('Set subsidiary from item data', 'Subsidiary ID: ' + subsidiary);
+            log.debug('Using subsidiary from item data', 'Subsidiary ID: ' + subsidiary);
         } else {
-            log.error('Missing subsidiary', 'Item data does not include subsidiary. PO creation may fail.');
+            log.error('Missing subsidiary', 'Item data does not include subsidiary. PO creation will fail.');
         }
 
-        // 2. Set vendor and transaction date
+        // Create the purchase order record with subsidiary set at creation time
+        // CRITICAL: In OneWorld, subsidiary MUST be set via defaultValues, not setValue()
+        const purchaseOrder = record.create({
+            type: record.Type.PURCHASE_ORDER,
+            isDynamic: true,
+            defaultValues: {
+                subsidiary: subsidiary
+            }
+        });
+
+        log.debug('PO Record Created', 'Subsidiary: ' + subsidiary + ' (set via defaultValues)');
+
+        // Set vendor and transaction date
         purchaseOrder.setValue('entity', parseInt(vendorId, 10));
         purchaseOrder.setValue('trandate', new Date());
         log.debug('Set vendor', 'Vendor ID: ' + vendorId + ', Subsidiary: ' + subsidiary);
