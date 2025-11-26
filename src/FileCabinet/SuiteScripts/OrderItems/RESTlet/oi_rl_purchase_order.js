@@ -329,21 +329,6 @@ function(record, search, log, runtime, format) {
                 value: parseInt(item.quantity, 10)
             });
 
-            // Set location IMMEDIATELY after item/quantity (before rate)
-            // Using 'location' field (not 'inventorylocation') per NetSuite transaction patterns
-            if (item.location) {
-                try {
-                    purchaseOrder.setCurrentSublistValue({
-                        sublistId: 'item',
-                        fieldId: 'location',
-                        value: parseInt(item.location, 10)
-                    });
-                    log.debug('Set line location', 'Line: ' + lineNum + ', Location: ' + item.location);
-                } catch (e) {
-                    log.error('Could not set line location', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
-                }
-            }
-
             // Set rate if we have one
             if (rate > 0) {
                 purchaseOrder.setCurrentSublistValue({
@@ -360,6 +345,20 @@ function(record, search, log, runtime, format) {
                     fieldId: 'description',
                     value: itemDetails.description
                 });
+            }
+
+            // Set inventorylocation AFTER rate/description, BEFORE commitLine (matches UI workflow)
+            if (item.location) {
+                try {
+                    purchaseOrder.setCurrentSublistValue({
+                        sublistId: 'item',
+                        fieldId: 'inventorylocation',
+                        value: parseInt(item.location, 10)
+                    });
+                    log.debug('Set line inventorylocation', 'Line: ' + lineNum + ', Inventory Location: ' + item.location);
+                } catch (e) {
+                    log.error('Could not set line inventorylocation', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
+                }
             }
 
             // Commit the line
