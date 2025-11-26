@@ -234,27 +234,26 @@ function(record, search, log, runtime, format) {
             }
         }
 
-        // Create the purchase order record with subsidiary and vendor set at creation time
-        // CRITICAL: In OneWorld, subsidiary MUST be set via defaultValues
-        // Setting vendor in defaultValues may help with location validation
+        // Create the purchase order record in STANDARD mode
+        // Standard mode: field order doesn't matter, NetSuite handles it at save time
         const purchaseOrder = record.create({
             type: record.Type.PURCHASE_ORDER,
-            isDynamic: true,
-            defaultValues: {
-                subsidiary: subsidiary,
-                entity: parseInt(vendorId, 10)
-            }
+            isDynamic: false  // Standard mode
         });
 
-        log.debug('PO Record Created', 'Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId + ' (set via defaultValues)');
+        log.debug('PO Record Created', 'Mode: Standard (isDynamic: false)');
 
-        // Set transaction date
-        purchaseOrder.setValue('trandate', new Date());
+        // Set header fields (order doesn't matter in standard mode)
+        purchaseOrder.setValue({ fieldId: 'subsidiary', value: subsidiary });
+        purchaseOrder.setValue({ fieldId: 'entity', value: parseInt(vendorId, 10) });
+        purchaseOrder.setValue({ fieldId: 'trandate', value: new Date() });
 
-        // 3. Set terms and currency (subsidiary-dependent)
+        log.debug('Set header fields', 'Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId);
+
+        // Set terms and currency
         if (vendorInfo.terms) {
             try {
-                purchaseOrder.setValue('terms', parseInt(vendorInfo.terms, 10));
+                purchaseOrder.setValue({ fieldId: 'terms', value: parseInt(vendorInfo.terms, 10) });
                 log.debug('Set Terms', vendorInfo.terms);
             } catch (e) {
                 log.debug('Could not set terms', e.message);
@@ -263,21 +262,21 @@ function(record, search, log, runtime, format) {
 
         if (vendorInfo.currency) {
             try {
-                purchaseOrder.setValue('currency', parseInt(vendorInfo.currency, 10));
+                purchaseOrder.setValue({ fieldId: 'currency', value: parseInt(vendorInfo.currency, 10) });
                 log.debug('Set Currency', vendorInfo.currency);
             } catch (e) {
                 log.debug('Could not set currency', e.message);
             }
         }
 
-        // Set location AFTER subsidiary and vendor are established
+        // Set header location
         if (location) {
             try {
-                purchaseOrder.setValue('location', location);
-                log.debug('Set header location successfully', 'Location: ' + location + ', Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId);
+                purchaseOrder.setValue({ fieldId: 'location', value: location });
+                log.debug('Set header location', 'Location: ' + location + ', Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId);
             } catch (e) {
                 log.error('Failed to set header location', 'Location: ' + location + ', Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId + ', Error: ' + e.message);
-                throw e; // Re-throw since location is required
+                throw e;
             }
         } else {
             log.error('No location available', 'Cannot create PO without location');
@@ -285,12 +284,12 @@ function(record, search, log, runtime, format) {
         }
 
         // Add memo/notes
-        const memo = (requestData && requestData.notes) ? requestData.notes : 
+        const memo = (requestData && requestData.notes) ? requestData.notes :
                      'Created from Order Items UI - ' + format.format({
                          value: new Date(),
                          type: format.Type.DATETIME
                      });
-        purchaseOrder.setValue('memo', memo);
+        purchaseOrder.setValue({ fieldId: 'memo', value: memo });
 
         // Add line items
         let totalAmount = 0;
@@ -316,43 +315,49 @@ function(record, search, log, runtime, format) {
                 log.debug('No rate available', 'Line: ' + lineNum + ', Item: ' + itemDetails.itemNumber);
             }
             
-            // Add line
-            purchaseOrder.selectNewLine({ sublistId: 'item' });
-            purchaseOrder.setCurrentSublistValue({
+            // Standard mode: use setSublistValue (no selectNewLine/commitLine needed)
+            // Field order doesn't matter - NetSuite handles it at save time
+            purchaseOrder.setSublistValue({
                 sublistId: 'item',
                 fieldId: 'item',
+                line: lineNum,
                 value: parseInt(item.itemId, 10)
             });
-            purchaseOrder.setCurrentSublistValue({
+
+            purchaseOrder.setSublistValue({
                 sublistId: 'item',
                 fieldId: 'quantity',
+                line: lineNum,
                 value: parseInt(item.quantity, 10)
             });
 
-            // Set rate if we have one
+            // Set rate if available
             if (rate > 0) {
-                purchaseOrder.setCurrentSublistValue({
+                purchaseOrder.setSublistValue({
                     sublistId: 'item',
                     fieldId: 'rate',
+                    line: lineNum,
                     value: rate
                 });
             }
 
             // Set description if available
             if (itemDetails.description) {
-                purchaseOrder.setCurrentSublistValue({
+                purchaseOrder.setSublistValue({
                     sublistId: 'item',
                     fieldId: 'description',
+                    line: lineNum,
                     value: itemDetails.description
                 });
             }
 
-            // Set inventorylocation AFTER rate/description, BEFORE commitLine (matches UI workflow)
+            // Set inventorylocation (field order doesn't matter in standard mode)
             if (item.location) {
                 try {
-                    purchaseOrder.setCurrentSublistValue({
+                    purchaseOrder.setSublistValue({
                         sublistId: 'item',
                         fieldId: 'inventorylocation',
+                        line: lineNum,
                         value: parseInt(item.location, 10)
                     });
                     log.debug('Set line inventorylocation', 'Line: ' + lineNum + ', Inventory Location: ' + item.location);
@@ -360,9 +365,6 @@ function(record, search, log, runtime, format) {
                     log.error('Could not set line inventorylocation', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
                 }
             }
-
-            // Commit the line
-            purchaseOrder.commitLine({ sublistId: 'item' });
             
             totalAmount += (item.quantity * rate);
             
