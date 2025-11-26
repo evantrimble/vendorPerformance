@@ -218,22 +218,38 @@ function(record, search, log, runtime, format) {
             log.error('Missing subsidiary', 'Item data does not include subsidiary. PO creation will fail.');
         }
 
-        // Create the purchase order record with subsidiary set at creation time
-        // CRITICAL: In OneWorld, subsidiary MUST be set via defaultValues, not setValue()
+        // Get location from item data
+        let location = null;
+        if (requestData && requestData.location) {
+            location = parseInt(requestData.location, 10);
+            log.debug('Using location from request', 'Location ID: ' + location);
+        } else if (items[0] && items[0].location) {
+            location = parseInt(items[0].location, 10);
+            log.debug('Using location from first item', 'Location ID: ' + location);
+        } else {
+            location = getDefaultLocation();
+            if (location) {
+                location = parseInt(location, 10);
+                log.debug('Using default location', 'Location ID: ' + location);
+            }
+        }
+
+        // Create the purchase order record with subsidiary and vendor set at creation time
+        // CRITICAL: In OneWorld, subsidiary MUST be set via defaultValues
+        // Setting vendor in defaultValues may help with location validation
         const purchaseOrder = record.create({
             type: record.Type.PURCHASE_ORDER,
             isDynamic: true,
             defaultValues: {
-                subsidiary: subsidiary
+                subsidiary: subsidiary,
+                entity: parseInt(vendorId, 10)
             }
         });
 
-        log.debug('PO Record Created', 'Subsidiary: ' + subsidiary + ' (set via defaultValues)');
+        log.debug('PO Record Created', 'Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId + ' (set via defaultValues)');
 
-        // Set vendor and transaction date
-        purchaseOrder.setValue('entity', parseInt(vendorId, 10));
+        // Set transaction date
         purchaseOrder.setValue('trandate', new Date());
-        log.debug('Set vendor', 'Vendor ID: ' + vendorId + ', Subsidiary: ' + subsidiary);
 
         // 3. Set terms and currency (subsidiary-dependent)
         if (vendorInfo.terms) {
@@ -254,9 +270,19 @@ function(record, search, log, runtime, format) {
             }
         }
 
-        // Note: NOT setting header-level location - NetSuite will derive from line items
-        // Header location validation can be problematic in multi-subsidiary environments
-        log.debug('Skipping header location', 'Will use line-level locations only');
+        // Set location AFTER subsidiary and vendor are established
+        if (location) {
+            try {
+                purchaseOrder.setValue('location', location);
+                log.debug('Set header location successfully', 'Location: ' + location + ', Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId);
+            } catch (e) {
+                log.error('Failed to set header location', 'Location: ' + location + ', Subsidiary: ' + subsidiary + ', Vendor: ' + vendorId + ', Error: ' + e.message);
+                throw e; // Re-throw since location is required
+            }
+        } else {
+            log.error('No location available', 'Cannot create PO without location');
+            throw new Error('Location is required for PO creation');
+        }
 
         // Add memo/notes
         const memo = (requestData && requestData.notes) ? requestData.notes : 
