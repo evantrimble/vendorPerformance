@@ -317,15 +317,27 @@ function(record, search, log, runtime, format) {
             }
             
             // Add line
-            purchaseOrder.selectNewLine('item');
-            purchaseOrder.setCurrentSublistValue('item', 'item', parseInt(item.itemId, 10));
-            purchaseOrder.setCurrentSublistValue('item', 'quantity', parseInt(item.quantity, 10));
+            purchaseOrder.selectNewLine({ sublistId: 'item' });
+            purchaseOrder.setCurrentSublistValue({
+                sublistId: 'item',
+                fieldId: 'item',
+                value: parseInt(item.itemId, 10)
+            });
+            purchaseOrder.setCurrentSublistValue({
+                sublistId: 'item',
+                fieldId: 'quantity',
+                value: parseInt(item.quantity, 10)
+            });
 
             // Set inventory location IMMEDIATELY after item/quantity (before rate)
-            // In dynamic mode, NetSuite may auto-source fields, so set location early
+            // Using object notation as per NetSuite 2.x best practices
             if (item.location) {
                 try {
-                    purchaseOrder.setCurrentSublistValue('item', 'inventorylocation', parseInt(item.location, 10));
+                    purchaseOrder.setCurrentSublistValue({
+                        sublistId: 'item',
+                        fieldId: 'inventorylocation',
+                        value: parseInt(item.location, 10)
+                    });
                     log.debug('Set line inventory location', 'Line: ' + lineNum + ', Inventory Location: ' + item.location);
                 } catch (e) {
                     log.error('Could not set line inventory location', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
@@ -334,16 +346,24 @@ function(record, search, log, runtime, format) {
 
             // Set rate if we have one
             if (rate > 0) {
-                purchaseOrder.setCurrentSublistValue('item', 'rate', rate);
+                purchaseOrder.setCurrentSublistValue({
+                    sublistId: 'item',
+                    fieldId: 'rate',
+                    value: rate
+                });
             }
 
             // Set description if available
             if (itemDetails.description) {
-                purchaseOrder.setCurrentSublistValue('item', 'description', itemDetails.description);
+                purchaseOrder.setCurrentSublistValue({
+                    sublistId: 'item',
+                    fieldId: 'description',
+                    value: itemDetails.description
+                });
             }
-            
+
             // Commit the line
-            purchaseOrder.commitLine('item');
+            purchaseOrder.commitLine({ sublistId: 'item' });
             
             totalAmount += (item.quantity * rate);
             
