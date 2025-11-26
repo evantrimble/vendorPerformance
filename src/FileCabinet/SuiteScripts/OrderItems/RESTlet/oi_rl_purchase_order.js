@@ -320,20 +320,21 @@ function(record, search, log, runtime, format) {
             purchaseOrder.selectNewLine('item');
             purchaseOrder.setCurrentSublistValue('item', 'item', parseInt(item.itemId, 10));
             purchaseOrder.setCurrentSublistValue('item', 'quantity', parseInt(item.quantity, 10));
-            
-            // Set rate if we have one
-            if (rate > 0) {
-                purchaseOrder.setCurrentSublistValue('item', 'rate', rate);
-            }
 
-            // Set inventory location on line if provided (for inventory items)
+            // Set inventory location IMMEDIATELY after item/quantity (before rate)
+            // In dynamic mode, NetSuite may auto-source fields, so set location early
             if (item.location) {
                 try {
                     purchaseOrder.setCurrentSublistValue('item', 'inventorylocation', parseInt(item.location, 10));
                     log.debug('Set line inventory location', 'Line: ' + lineNum + ', Inventory Location: ' + item.location);
                 } catch (e) {
-                    log.debug('Could not set line inventory location', 'Item: ' + item.itemId + ', Error: ' + e.message);
+                    log.error('Could not set line inventory location', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
                 }
+            }
+
+            // Set rate if we have one
+            if (rate > 0) {
+                purchaseOrder.setCurrentSublistValue('item', 'rate', rate);
             }
 
             // Set description if available
