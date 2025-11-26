@@ -329,18 +329,18 @@ function(record, search, log, runtime, format) {
                 value: parseInt(item.quantity, 10)
             });
 
-            // Set inventory location IMMEDIATELY after item/quantity (before rate)
-            // Using object notation as per NetSuite 2.x best practices
+            // Set location IMMEDIATELY after item/quantity (before rate)
+            // Using 'location' field (not 'inventorylocation') per NetSuite transaction patterns
             if (item.location) {
                 try {
                     purchaseOrder.setCurrentSublistValue({
                         sublistId: 'item',
-                        fieldId: 'inventorylocation',
+                        fieldId: 'location',
                         value: parseInt(item.location, 10)
                     });
-                    log.debug('Set line inventory location', 'Line: ' + lineNum + ', Inventory Location: ' + item.location);
+                    log.debug('Set line location', 'Line: ' + lineNum + ', Location: ' + item.location);
                 } catch (e) {
-                    log.error('Could not set line inventory location', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
+                    log.error('Could not set line location', 'Item: ' + item.itemId + ', Location: ' + item.location + ', Error: ' + e.message);
                 }
             }
 
